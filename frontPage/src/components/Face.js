@@ -18,7 +18,7 @@ const Face = () => {
         style={{
           position: "absolute",
           top: "10%",
-          left: "22.5%",
+          left: "30.5%",
           transform: 'translate("-50%", "-50%")',
           fontSize: "8em",
           color: "#605DE4",
@@ -31,7 +31,7 @@ const Face = () => {
         style={{
           position: "absolute",
           top: "30%",
-          left: "26.5%",
+          left: "33.5%",
           transform: 'translate("-50%", "-50%")',
           fontSize: "8em",
           color: "#605DE4",
@@ -62,7 +62,7 @@ const Face = () => {
         style={{
           position: "absolute",
           top: "89%",
-          left: "45%",
+          left: "47%",
         }}
       >
         <Button
