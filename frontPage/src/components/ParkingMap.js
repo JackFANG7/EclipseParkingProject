@@ -15,6 +15,7 @@ import {
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
 const ParkingMap = (props) => {
+  const [mode, setMode] = useState([]);
   const defaultProps =
     props.decodeAddress.length === 0
       ? {
@@ -42,10 +43,7 @@ const ParkingMap = (props) => {
       icon: "http://maps.google.com/mapfiles/kml/shapes/forbidden.png",
     },
   };
-  // const infowindow = new InfoWindow({
-  //   content: "parking meters",
-  //   ariaLabel: "Uluru",
-  // });
+
   const MyMapComponent = withScriptjs(
     withGoogleMap((prop) => (
       <GoogleMap defaultZoom={16} defaultCenter={defaultProps.center}>
@@ -100,7 +98,8 @@ const ParkingMap = (props) => {
           height: "100%",
           width: "50%",
           position: "absolute",
-          top: "20%",
+          top: "25%",
+          paddingLeft: "5%",
         }}
       >
         <MyMapComponent
@@ -111,13 +110,30 @@ const ParkingMap = (props) => {
           mapElement={<div style={{ height: `100%` }} />}
         />
       </div>
+
+      {/* below is new drop down+carousel card */}
+      {/* <div>
+      <Select
+            defaultValue="ParkingMap"
+            style={{ width: 120 }}
+            onSelect={(value) => {
+              setSelect(value);
+            }}
+          >
+            <Option value="parking">ParkingMap</Option>
+            <Option value="traffic">TrafficMap</Option>
+          </Select>
+      </div> */}
+
+      {/* below is old card */}
       <div
         style={{
           height: "60%",
           width: "50%",
           position: "absolute",
-          top: "20%",
+          top: "25%",
           left: "50%",
+          paddingRight: "5%",
           overflow: "scroll",
         }}
       >
@@ -125,21 +141,13 @@ const ParkingMap = (props) => {
           <Col span={8}>
             {props.parkingMetersData.map((item) => {
               return (
-                // <Col span={8}>
-                <Card
-                  title={`Parking Meters #${item.id}`}
-                  bordered={false}
-                  // style={{
-                  //   width: 300,
-                  // }}
-                >
+                <Card title={`Parking Meters #${item.id}`} bordered={false}>
                   <p>daysOfOperation: {item.daysOfOperation}</p>
                   <p>hourlyRate: {item.hourlyRate}</p>
                   <p>maxTime: {item.maxTime}</p>
                   <p>hoursOfOperation: {item.hoursOfOperation}</p>
                   <p>typeOfMeter: {item.typeOfMeter}</p>
                 </Card>
-                // </Col>
               );
             })}
           </Col>

@@ -1,3 +1,4 @@
+import { Button } from "antd";
 const Face = () => {
   return (
     <div
@@ -12,14 +13,16 @@ const Face = () => {
         style={{ width: "100%", height: "100%" }}
         alt="world map"
       />
+
       <div
         style={{
           position: "absolute",
           top: "10%",
-          left: "28%",
+          left: "22.5%",
           transform: 'translate("-50%", "-50%")',
-          fontSize: "10em",
+          fontSize: "8em",
           color: "#605DE4",
+          fontFamily: "Verdana",
         }}
       >
         It's More Than
@@ -28,10 +31,11 @@ const Face = () => {
         style={{
           position: "absolute",
           top: "30%",
-          left: "30%",
+          left: "26.5%",
           transform: 'translate("-50%", "-50%")',
-          fontSize: "10em",
+          fontSize: "8em",
           color: "#605DE4",
+          fontFamily: "Verdana",
         }}
       >
         Just Parking
@@ -41,28 +45,33 @@ const Face = () => {
           textAlign: "center",
           position: "absolute",
           top: "60%",
-          left: "22%",
+          left: "21%",
           width: "58%",
           fontSize: "20px",
+          marginTop: "1%",
+          fontFamily: "monaco monospace",
         }}
       >
         Eclipse, a technology development team, provides customers visualization
         of possible parking lots around their destination. Based on free street
         parking lots, parking meters, parking structures distribution, distance
-        and traffic around the destination , our system will generate a
-        composite index to recommend parking lots to our customers.
+        and traffic around the destination, our system will generate a composite
+        index to recommend parking lots to our customers.
       </div>
       <div
         style={{
-          textAlign: "center",
           position: "absolute",
-          top: "80%",
-          left: "19%",
-          width: "60%",
-          fontSize: "100px",
+          top: "89%",
+          left: "45%",
         }}
       >
-        Click to start
+        <Button
+          type="primary"
+          shape="round"
+          style={{ background: "#605DE4", borderColor: "white" }}
+        >
+          Click to Start
+        </Button>
       </div>
     </div>
   );
