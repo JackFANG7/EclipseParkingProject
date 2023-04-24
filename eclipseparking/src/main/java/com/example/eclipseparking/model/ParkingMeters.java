@@ -28,6 +28,16 @@ public class ParkingMeters implements Serializable {
     @Column(name="TYPE_OF_METER")
     private String typeOfMeter;
     private Double recommendationIndex;
+    private Integer index;
+
+    public Integer getIndex() {
+        return index;
+    }
+
+    public ParkingMeters setIndex(Integer index) {
+        this.index = index;
+        return this;
+    }
 
     public Double getRecommendationIndex() {
         return recommendationIndex;
