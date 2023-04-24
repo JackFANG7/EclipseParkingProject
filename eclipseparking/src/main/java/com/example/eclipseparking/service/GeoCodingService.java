@@ -22,9 +22,9 @@ public class GeoCodingService {
     public GeoPoint getLatLng(String address) {
         try{
             GeocodingResult result = GeocodingApi.geocode(context,address).await()[0];
-            if(result.partialMatch){
-                throw new InvalidAddressException("Failed to find stay address");
-            }
+//            if(result.partialMatch){
+//                throw new InvalidAddressException("Failed to find stay address");
+//            }
             return new GeoPoint(result.geometry.location.lat,result.geometry.location.lng);
         } catch (IOException | ApiException | InterruptedException e){
             e.printStackTrace();
