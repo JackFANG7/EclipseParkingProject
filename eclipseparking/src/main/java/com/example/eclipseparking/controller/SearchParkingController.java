@@ -3,6 +3,7 @@ package com.example.eclipseparking.controller;
 import com.example.eclipseparking.model.ParkingMeters;
 import com.example.eclipseparking.model.ParkingSigns;
 import com.example.eclipseparking.model.PublicParking;
+import com.example.eclipseparking.service.GenerateRecommendationIndex;
 import com.example.eclipseparking.service.GeoCodingService;
 import com.example.eclipseparking.service.ParkingLotService;
 import com.example.eclipseparking.service.SearchParkingService;
@@ -16,10 +17,12 @@ public class SearchParkingController {
     private final SearchParkingService searchParkingService;
     private final ParkingLotService parkingLotService;
     private final GeoCodingService geoCodingService;
-    public SearchParkingController(SearchParkingService searchParkingService, ParkingLotService parkingLotService, GeoCodingService geoCodingService) {
+    private final GenerateRecommendationIndex generateRecommendationIndex;
+    public SearchParkingController(SearchParkingService searchParkingService, ParkingLotService parkingLotService, GeoCodingService geoCodingService, GenerateRecommendationIndex generateRecommendationIndex) {
         this.searchParkingService = searchParkingService;
         this.parkingLotService = parkingLotService;
         this.geoCodingService = geoCodingService;
+        this.generateRecommendationIndex = generateRecommendationIndex;
     }
     @GetMapping("/get/search")
     public List<Integer> search( @RequestParam(name="address") String address,
@@ -33,21 +36,21 @@ public class SearchParkingController {
                                                 @RequestParam(name = "date") String date,
                                                 @RequestParam(name = "time") String time){
         GeoPoint geoPoint=geoCodingService.getLatLng(address);
-        return searchParkingService.searchParkingMeters(null,null,geoPoint.getLat(),geoPoint.getLon(),"0.2");
+        return searchParkingService.searchParkingMeters(date,time,geoPoint.getLat(),geoPoint.getLon(),"0.25");
     }
     @GetMapping("/get/parkingSigns")
     public List<ParkingSigns> getParkingSigns(@RequestParam(name="address") String address,
                                               @RequestParam(name = "date") String date,
                                               @RequestParam(name = "time") String time){
         GeoPoint geoPoint=geoCodingService.getLatLng(address);
-        return searchParkingService.searchParkingSigns(null,null,geoPoint.getLat(),geoPoint.getLon(),"0.1");
+        return searchParkingService.searchParkingSigns(date,time,geoPoint.getLat(),geoPoint.getLon(),"0.1");
     }
     @GetMapping("/get/parkingStructures")
     public List<PublicParking> getParkingStructures(@RequestParam(name="address") String address,
                                                     @RequestParam(name = "date") String date,
                                                     @RequestParam(name = "time") String time){
         GeoPoint geoPoint=geoCodingService.getLatLng(address);
-        return searchParkingService.searchPublicParkings(null,null,geoPoint.getLat(),geoPoint.getLon(),"0.3");
+        return searchParkingService.searchPublicParkings(date,time,geoPoint.getLat(),geoPoint.getLon(),"0.35");
     }
 //    @PostMapping("/add")
 //    public void add() throws IOException {

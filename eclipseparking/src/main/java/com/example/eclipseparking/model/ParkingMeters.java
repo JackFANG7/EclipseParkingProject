@@ -1,5 +1,7 @@
 package com.example.eclipseparking.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -25,6 +27,16 @@ public class ParkingMeters implements Serializable {
     private String hoursOfOperation;
     @Column(name="TYPE_OF_METER")
     private String typeOfMeter;
+    private Double recommendationIndex;
+
+    public Double getRecommendationIndex() {
+        return recommendationIndex;
+    }
+
+    public ParkingMeters setRecommendationIndex(Double recommendationIndex) {
+        this.recommendationIndex = recommendationIndex;
+        return this;
+    }
 
     public int getId() {
         return id;

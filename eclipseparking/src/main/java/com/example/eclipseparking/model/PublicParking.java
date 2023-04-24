@@ -20,6 +20,16 @@ public class PublicParking implements Serializable {
     private String hourlyRate;
     @Column(name="EV_CHARGING")
     private String evCharging;
+    private Double recommendationIndex;
+
+    public Double getRecommendationIndex() {
+        return recommendationIndex;
+    }
+
+    public PublicParking setRecommendationIndex(Double recommendationIndex) {
+        this.recommendationIndex = recommendationIndex;
+        return this;
+    }
 
     public int getId() {
         return id;
