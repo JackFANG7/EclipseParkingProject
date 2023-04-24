@@ -38,7 +38,9 @@ export const getDecodeAddress = (value) => {
   });
 };
 export const getParkingMetersResult = (value) => {
-  const url = `/get/parkingMeters?address=${value.address}&date=${value.date}&time=${value.time}`;
+  const url = `/get/parkingMeters?address=${value.address}&date=${
+    value.date
+  }&time=${value.time.format("HH:mm")}`;
   return fetch(url).then((response) => {
     if (response.status < 200 || response.status >= 300) {
       throw Error("Fail to get result");
@@ -48,7 +50,9 @@ export const getParkingMetersResult = (value) => {
 };
 export const getParkingStructuresResult = (value) => {
   return fetch(
-    `/get/parkingStructures?address=${value.address}&date=${value.date}&time=${value.time}`
+    `/get/parkingStructures?address=${value.address}&date=${
+      value.date
+    }&time=${value.time.format("HH:mm")}`
   ).then((response) => {
     if (response.status < 200 || response.status >= 300) {
       throw Error("Fail to get result");
@@ -59,7 +63,9 @@ export const getParkingStructuresResult = (value) => {
 };
 export const getParkingSignsResult = (value) => {
   return fetch(
-    `/get/parkingSigns?address=${value.address}&date=${value.date}&time=${value.time}`
+    `/get/parkingSigns?address=${value.address}&date=${
+      value.date
+    }&time=${value.time.format("HH:mm")}`
   ).then((response) => {
     if (response.status < 200 || response.status >= 300) {
       throw Error("Fail to get result");
