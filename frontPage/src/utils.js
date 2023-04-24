@@ -38,7 +38,6 @@ export const getDecodeAddress = (value) => {
   });
 };
 export const getParkingMetersResult = (value) => {
-  console.log("print: " + value.date.format("ddd"));
   const url = `/get/parkingMeters?address=${value.address}&date=${
     value.date
   }&time=${value.time.format("HH:mm")}`;

@@ -111,12 +111,12 @@ const ParkingMap = (props) => {
                 position={{ lat: item.lat, lng: item.lon }}
                 title="parking meters"
                 icon={
-                  item.id == click || item.id == current
+                  item.id == click // || item.id == current
                     ? largeIconParkingMeter
                     : iconParkingMeter
                 }
-                onClick={() => handleMarkerClick(item.id)}
-                style={styles}
+                // onClick={() => handleMarkerClick(item.id)}
+                // style={styles}
               ></Marker>
             );
           })}
