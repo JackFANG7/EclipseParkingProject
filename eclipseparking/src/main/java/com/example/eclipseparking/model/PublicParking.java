@@ -21,6 +21,7 @@ public class PublicParking implements Serializable {
     @Column(name="EV_CHARGING")
     private String evCharging;
     private Double recommendationIndex;
+    @Column(name="parkingNumber")
     private Integer index;
 
     public Integer getIndex() {

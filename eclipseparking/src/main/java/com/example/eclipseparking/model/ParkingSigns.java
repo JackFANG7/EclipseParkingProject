@@ -1,6 +1,7 @@
 package com.example.eclipseparking.model;
 
 import javax.naming.Name;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -16,6 +17,7 @@ public class ParkingSigns implements Serializable {
     private Double lon;
     private String sign;
     private Double recommendationIndex;
+    @Column(name="parkingNumber")
     private Integer index;
 
     public Integer getIndex() {
