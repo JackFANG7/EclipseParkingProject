@@ -43,6 +43,7 @@ const SearchForm = () => {
   const onFinish = (values) => {
     console.log(values);
     setLoading(true);
+    // console.log(values);
     getParkingMetersResult(values)
       .then((data) => {
         setParkingMeters(data);

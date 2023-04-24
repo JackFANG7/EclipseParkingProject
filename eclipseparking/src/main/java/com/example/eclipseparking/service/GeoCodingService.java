@@ -28,7 +28,7 @@ public class GeoCodingService {
             return new GeoPoint(result.geometry.location.lat,result.geometry.location.lng);
         } catch (IOException | ApiException | InterruptedException e){
             e.printStackTrace();
-            throw new GeoCodingException("Failed to encode stay address");
+            throw new GeoCodingException("Failed to encode address");
         }
     }
 }
