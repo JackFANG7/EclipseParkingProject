@@ -43,7 +43,7 @@ public class SearchParkingController {
                                               @RequestParam(name = "date") String date,
                                               @RequestParam(name = "time") String time){
         GeoPoint geoPoint=geoCodingService.getLatLng(address);
-        return searchParkingService.searchParkingSigns(date,time,geoPoint.getLat(),geoPoint.getLon(),"0.1");
+        return searchParkingService.searchParkingSigns(date,time.substring(time.length()-2,time.length()),geoPoint.getLat(),geoPoint.getLon(),"0.1");
     }
     @GetMapping("/get/parkingStructures")
     public List<PublicParking> getParkingStructures(@RequestParam(name="address") String address,
