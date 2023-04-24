@@ -24,11 +24,6 @@ const ParkingMap = (props) => {
   const [current, setCurrent] = useState(0);
   const carouselRef = useRef(null);
   const [mode, setMode] = useState([]);
-  const [selected, setSelected] = useState(false);
-
-  const styles = {
-    transform: selected ? "scale(5)" : "scale(1)",
-  };
 
   const defaultProps =
     props.decodeAddress.length === 0
@@ -81,11 +76,9 @@ const ParkingMap = (props) => {
     };
   }
 
-  function handleMarkerClick(index) {
-    setCurrent(index);
-    setSelected(true);
-    console.log("debug:" + index);
-    carouselRef.current.goTo(0);
+  function handleMarkerClick(item) {
+    setCurrent(item.index);
+    carouselRef.current.goTo(item.index);
   }
 
   function handleBeforeChange(from, to) {
@@ -111,12 +104,11 @@ const ParkingMap = (props) => {
                 position={{ lat: item.lat, lng: item.lon }}
                 title="parking meters"
                 icon={
-                  item.id == click // || item.id == current
+                  item.id == click || item.index == current
                     ? largeIconParkingMeter
                     : iconParkingMeter
                 }
-                // onClick={() => handleMarkerClick(item.id)}
-                style={{ transform: "scale(1.5)" }}
+                onClick={() => handleMarkerClick(item)}
               ></Marker>
             );
           })}
@@ -128,10 +120,11 @@ const ParkingMap = (props) => {
                 position={{ lat: item.lat, lng: item.lon }}
                 title="parking structures"
                 icon={
-                  item.id == click
+                  item.id == click || item.index == current
                     ? largeIconParkingStructure
                     : iconParkingStructure
                 }
+                onClick={() => handleMarkerClick(item)}
               ></Marker>
             );
           })}
@@ -142,7 +135,12 @@ const ParkingMap = (props) => {
                 key={item.id}
                 position={{ lat: item.lat, lng: item.lon }}
                 title="parking signs"
-                icon={item.id == click ? largeIconParkingSign : iconParkingSign}
+                icon={
+                  item.id == click || item.index == current
+                    ? largeIconParkingSign
+                    : iconParkingSign
+                }
+                onClick={() => handleMarkerClick(item)}
               ></Marker>
             );
           })}
@@ -194,7 +192,7 @@ const ParkingMap = (props) => {
             setMode(value);
           }}
         >
-          <Option value="sign">Parking Sign</Option>
+          <Option value="sign">Parking Street</Option>
           <Option value="structure">Parking Structure</Option>
           <Option value="meter">Parking Meter</Option>
         </Select>
@@ -219,7 +217,7 @@ const ParkingMap = (props) => {
               return (
                 <div>
                   <Card
-                    key={item.id}
+                    // key={item.id}
                     title={`Parking Meters #${item.id}`}
                     bordered={false}
                     style={{ backgroundColor: "#aaabee91", height: "400px" }}
@@ -228,6 +226,9 @@ const ParkingMap = (props) => {
                     }}
                   >
                     <p>Recommendation Index: {emoji}</p>
+                    <p>
+                      Location: [{item.lat}, {item.lon}]
+                    </p>
                     <p>Days Of Operation: {item.daysOfOperation}</p>
                     <p>Hourly Rate: {item.hourlyRate}</p>
                     <p>Max Parking Time: {item.maxTime} hr</p>
@@ -249,12 +250,15 @@ const ParkingMap = (props) => {
                     key={item.id}
                     title={`Parking Structure #${item.id}`}
                     bordered={false}
-                    style={{ backgroundColor: "#aaabee91" }}
+                    style={{ backgroundColor: "#aaabee91", height: "400px" }}
                     onClick={() => {
                       setClick(item.id);
                     }}
                   >
                     <p>Recommendation Index: {emoji}</p>
+                    <p>
+                      Location: [{item.lat}, {item.lon}]
+                    </p>
                     <p>Spaces: {item.spaces}</p>
                     <p>Days Of Operation: {item.daysOfOperation}</p>
                     <p>Hourly Rate: {item.hourlyRate}</p>
@@ -275,13 +279,16 @@ const ParkingMap = (props) => {
                     key={item.id}
                     title={`Parking Sign #${item.id}`}
                     bordered={false}
-                    style={{ backgroundColor: "#aaabee91" }}
+                    style={{ backgroundColor: "#aaabee91", height: "400px" }}
                     onClick={() => {
                       setClick(item.id);
                     }}
                   >
                     <p>Recommendation Index: {emoji}</p>
-                    <p>Infomation: {item.sign}</p>
+                    <p>
+                      Location: [{item.lat}, {item.lon}]
+                    </p>
+                    <p>Information: {item.sign}</p>
                   </Card>
                 </div>
               );

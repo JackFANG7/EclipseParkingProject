@@ -49,9 +49,9 @@ public class SearchParkingService {
         for(ParkingMeters parkingMeter: parkingMeters){
             Double[] timeRange=predictionRepository.findFirstByDistance(parkingMeter.getLat(),parkingMeter.getLon()).array();
             double trafficJam =timeRange[index];
-            double distance1=map.get(parkingMeter.getId());
+            double distance1=Double.valueOf(distance)-map.get(parkingMeter.getId());
             double price= Double.parseDouble(parkingMeter.getHourlyRate());
-            double recommendationIndex=0.3*trafficJam+0.5*distance1+0.2*price;
+            double recommendationIndex=0.2*trafficJam+0.6*distance1+0.2*price;
             parkingMeter.setRecommendationIndex(recommendationIndex);
             min=Math.min(min,recommendationIndex);
             max=Math.max(max,recommendationIndex);
@@ -112,9 +112,9 @@ public class SearchParkingService {
         for(PublicParking publicParking: publicParkings){
             Double[] timeRange=predictionRepository.findFirstByDistance(publicParking.getLat(),publicParking.getLon()).array();
             double trafficJam =timeRange[index];
-            double distance1=map.get(publicParking.getId());
+            double distance1=Double.valueOf(distance)-map.get(publicParking.getId());
             double price= Double.parseDouble(publicParking.getHourlyRate());
-            double recommendationIndex=0.3*trafficJam+0.5*distance1+0.2*price+(publicParking.getEvCharging().equals("Yes") ? 1 : 0);
+            double recommendationIndex=0.2*trafficJam+0.6*distance1+0.2*price+(publicParking.getEvCharging().equals("Yes") ? 1 : 0);
             publicParking.setRecommendationIndex(recommendationIndex);
             min=Math.min(min,recommendationIndex);
             max=Math.max(max,recommendationIndex);
@@ -176,8 +176,8 @@ public class SearchParkingService {
         for(ParkingSigns parkingSign: parkingSigns){
                 Double[] timeRange=predictionRepository.findFirstByDistance(parkingSign.getLat(),parkingSign.getLon()).array();
                 double trafficJam =timeRange[index];
-                double distance1=map.get(parkingSign.getId());
-                double recommendationIndex=0.4*trafficJam+0.6*distance1;
+                double distance1=Double.valueOf(distance)-map.get(parkingSign.getId());
+                double recommendationIndex=0.2*trafficJam+0.8*distance1;
                 parkingSign.setRecommendationIndex(recommendationIndex);
                 min=Math.min(min,recommendationIndex);
                 max=Math.max(max,recommendationIndex);
