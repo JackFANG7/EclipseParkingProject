@@ -51,7 +51,7 @@ public class SearchParkingService {
             double trafficJam =timeRange[index];
             double distance1=map.get(parkingMeter.getId());
             double price= Double.parseDouble(parkingMeter.getHourlyRate());
-            double recommendationIndex=0.5*trafficJam+0.3*distance1+0.2*price;
+            double recommendationIndex=0.3*trafficJam+0.5*distance1+0.2*price;
             parkingMeter.setRecommendationIndex(recommendationIndex);
             min=Math.min(min,recommendationIndex);
             max=Math.max(max,recommendationIndex);
@@ -74,7 +74,14 @@ public class SearchParkingService {
                 return o1.getRecommendationIndex()-o2.getRecommendationIndex()>0 ? -1 : 1;
             }
         });
-        return parkingMeters;
+        if(parkingMeters.size()<=5) {
+            return parkingMeters;
+        }
+        List<ParkingMeters> list=new ArrayList<>();
+        for(int i=0; i<5; i++){
+            list.add(parkingMeters.get(i));
+        }
+        return list;
     }
     public List<PublicParking> searchPublicParkings(String parkingDate, String parkingTime,double lat, double lon, String distance) {
 
@@ -103,7 +110,7 @@ public class SearchParkingService {
             double trafficJam =timeRange[index];
             double distance1=map.get(publicParking.getId());
             double price= Double.parseDouble(publicParking.getHourlyRate());
-            double recommendationIndex=0.5*trafficJam+0.3*distance1+0.2*price+(publicParking.getEvCharging().equals("Yes") ? 1 : 0);
+            double recommendationIndex=0.3*trafficJam+0.5*distance1+0.2*price+(publicParking.getEvCharging().equals("Yes") ? 1 : 0);
             publicParking.setRecommendationIndex(recommendationIndex);
             min=Math.min(min,recommendationIndex);
             max=Math.max(max,recommendationIndex);
@@ -126,7 +133,14 @@ public class SearchParkingService {
                 return o1.getRecommendationIndex()-o2.getRecommendationIndex()>0 ? -1 : 1;
             }
         });
-        return publicParkings;
+        if(publicParkings.size()<=5) {
+            return publicParkings;
+        }
+        List<PublicParking> list=new ArrayList<>();
+        for(int i=0; i<5; i++){
+            list.add(publicParkings.get(i));
+        }
+        return list;
     }
     public List<ParkingSigns> searchParkingSigns(String parkingDate, String parkingTime,double lat, double lon, String distance) {
 
@@ -137,11 +151,59 @@ public class SearchParkingService {
             return new ArrayList<>();
         }
         List<Integer> ids=new ArrayList<>();
+        Map<Integer,Double> map=new HashMap<>();
         for(ParkingSpot parkingSpot: parkingSpots){
-            ids.add(parkingSpot.getId().intValue());
+            ids.add(parkingSpot.getId());
+            map.put(parkingSpot.getId(),parkingSpot.getDistance());
         }
         List<ParkingSigns> parkingSigns=searchParkingSigns.findAllByIdIn(ids);
-        return parkingSigns;
+        String[] splitString=parkingTime.split(":");
+        if(splitString[0].startsWith("0")){
+            splitString[0]=splitString[0].substring(1,2);
+        }
+        int index=Integer.parseInt(splitString[0])*2+(Integer.parseInt(splitString[1])==30 ? 1 : 0);
+        double min=Double.MAX_VALUE;
+        double max=Double.MIN_VALUE;
+        for(ParkingSigns parkingSign: parkingSigns){
+                Double[] timeRange=predictionRepository.findFirstByDistance(parkingSign.getLat(),parkingSign.getLon()).array();
+                double trafficJam =timeRange[index];
+                double distance1=map.get(parkingSign.getId());
+                double recommendationIndex=0.4*trafficJam+0.6*distance1;
+                parkingSign.setRecommendationIndex(recommendationIndex);
+                min=Math.min(min,recommendationIndex);
+                max=Math.max(max,recommendationIndex);
+        }
+        for(ParkingSigns parkingSign: parkingSigns){
+            for(int i=0; i<parkingSign.getSign().length(); i++){
+                if(Character.isDigit(parkingSign.getSign().charAt(i))){
+                    double recommendationIndex=parkingSign.getRecommendationIndex();
+                    if(max==min){
+                        parkingSign.setRecommendationIndex(5.0);
+                        break;
+                    }
+                    recommendationIndex=4*(recommendationIndex-min)/(max-min)+1;
+                    parkingSign.setRecommendationIndex(recommendationIndex);
+                    break;
+                }
+            }
+        }
+        Collections.sort(parkingSigns, new Comparator<ParkingSigns>() {
+            @Override
+            public int compare(ParkingSigns o1, ParkingSigns o2) {
+                if((o1.getRecommendationIndex()-o2.getRecommendationIndex())==0){
+                    return 0;
+                }
+                return o1.getRecommendationIndex()-o2.getRecommendationIndex()>0 ? -1 : 1;
+            }
+        });
+        if(parkingSigns.size()<=5) {
+            return parkingSigns;
+        }
+        List<ParkingSigns> list=new ArrayList<>();
+        for(int i=0; i<5; i++){
+            list.add(parkingSigns.get(i));
+        }
+        return list;
     }
     public List<Integer> search(LocalDate parkingDate, LocalDateTime parkingTime,double lat, double lon, String distance) {
 

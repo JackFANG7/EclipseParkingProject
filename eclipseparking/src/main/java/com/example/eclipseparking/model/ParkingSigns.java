@@ -15,6 +15,16 @@ public class ParkingSigns implements Serializable {
     private Double lat;
     private Double lon;
     private String sign;
+    private Double recommendationIndex;
+
+    public Double getRecommendationIndex() {
+        return recommendationIndex;
+    }
+
+    public ParkingSigns setRecommendationIndex(Double recommendationIndex) {
+        this.recommendationIndex = recommendationIndex;
+        return this;
+    }
 
     public int getId() {
         return id;
