@@ -33,11 +33,14 @@ export default function TrafficMap(props) {
   const MyMapComponent = withScriptjs(
     withGoogleMap((prop) => (
       <GoogleMap defaultZoom={16} defaultCenter={defaultProps.center}>
-        {/* <Marker
+        <Marker
           position={defaultProps.center}
           title="destination"
-          icon="http://maps.google.com/mapfiles/kml/paddle/D.png"
-        ></Marker> */}
+          icon={{
+            url: "http://maps.google.com/mapfiles/kml/paddle/D.png",
+            scaledSize: new window.google.maps.Size(45, 45),
+          }}
+        ></Marker>
         <TrafficLayer />
       </GoogleMap>
     ))
