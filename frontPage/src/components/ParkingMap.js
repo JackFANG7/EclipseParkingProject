@@ -3,7 +3,7 @@ import GoogleMapReact from "google-map-react";
 // import { GoogleMap, Marker } from "react-google-maps";
 import SearchForm from "./SearchForm";
 import { Content } from "antd/lib/layout/layout";
-import { Card, Col, Row } from "antd";
+import { Card, Col, Row, Select, Carousel } from "antd";
 // import { compose, withProps } from "recompose";
 import {
   withScriptjs,
@@ -11,10 +11,15 @@ import {
   GoogleMap,
   Marker,
 } from "react-google-maps";
+
+
+const { Option } = Select;
+
 import parkingSignIcon from "../assets/parking-sign-13347.svg";
 import parkingStructureIcon from "../assets/car-parking-location-red-placeholder-15952.svg";
 import parkingMeterIcon from "../assets/parking-meter-svgrepo-com.svg";
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
+
 
 const ParkingMap = (props) => {
   const [click, setClick] = useState();
@@ -35,6 +40,8 @@ const ParkingMap = (props) => {
           },
           zoom: 15,
         };
+
+
   var iconParkingSign = {};
   var iconParkingStructure = {};
   var iconParkingMeter = {};
@@ -67,6 +74,7 @@ const ParkingMap = (props) => {
       scaledSize: new window.google.maps.Size(50, 50),
     };
   }
+
   const MyMapComponent = withScriptjs(
     withGoogleMap((prop) => (
       <GoogleMap defaultZoom={16} defaultCenter={defaultProps.center}>
@@ -114,6 +122,15 @@ const ParkingMap = (props) => {
       </GoogleMap>
     ))
   );
+
+  const contentStyle = {
+    margin: 0,
+    height: "50%",
+    color: "#fff",
+    textAlign: "center",
+    background: "#364d79",
+  };
+
   return (
     // Important! Always set the container height explicitly
     <div
@@ -141,31 +158,51 @@ const ParkingMap = (props) => {
       </div>
 
       {/* below is new drop down+carousel card */}
-      {/* <div>
-      <Select
-            defaultValue="ParkingMap"
-            style={{ width: 120 }}
-            onSelect={(value) => {
-              setSelect(value);
-            }}
-          >
-            <Option value="parking">ParkingMap</Option>
-            <Option value="traffic">TrafficMap</Option>
-          </Select>
-      </div> */}
 
-      {/* below is old card */}
+      <div style={{ position: "absolute", top: "25%", left: "52%" }}>
+        <Select
+          defaultValue="Parking Mode"
+          style={{ width: 150 }}
+          onSelect={(value) => {
+            setMode(value);
+          }}
+        >
+          <Option value="sign">Parking Sign</Option>
+          <Option value="structure">Parking Structure</Option>
+          <Option value="meter">Parking Meter</Option>
+        </Select>
+      </div>
+
       <div
         style={{
-          height: "60%",
-          width: "50%",
           position: "absolute",
-          top: "25%",
-          left: "50%",
-          paddingRight: "5%",
-          overflow: "scroll",
+          top: "33%",
+          left: "52%",
+          width: "610px",
+          height: "405px",
+          backgroundColor: "orange",
         }}
       >
+
+        <Carousel>
+          {props.parkingMetersData.map((item) => {
+            return (
+              <Card title={`Parking Meters #${item.id}`} bordered={false}>
+                <p>Recommendation Index: {}</p>
+                <p>daysOfOperation: {item.daysOfOperation}</p>
+                <p>hourlyRate: {item.hourlyRate}</p>
+                <p>maxTime: {item.maxTime}</p>
+                <p>hoursOfOperation: {item.hoursOfOperation}</p>
+                <p>typeOfMeter: {item.typeOfMeter}</p>
+              </Card>
+            );
+          })}
+
+          <div>
+            <h1>slide1</h1>
+          </div>
+        </Carousel>
+
         <Row gutter={16}>
           <Col span={8}>
             {props.parkingMetersData.map((item) => {
@@ -221,7 +258,6 @@ const ParkingMap = (props) => {
           <Col span={8}>
             {props.parkingSignsData.map((item) => {
               return (
-                // <Col span={8}>
                 <div
                   onClick={() => {
                     setClick(item.id);
@@ -229,10 +265,6 @@ const ParkingMap = (props) => {
                 >
                   <Card
                     title={`Parking Signs #${item.id}`}
-                    // bordered={false}
-                    // style={{
-                    //   width: 300,
-                    // }}
                   >
                     <p>spaces: {item.sign}</p>
                     {/* <p>daysOfOperation: {item.daysOfOperation}</p>
@@ -245,7 +277,9 @@ const ParkingMap = (props) => {
             })}
           </Col>
         </Row>
+
       </div>
+      {/* below is old card */}
     </div>
   );
 };
