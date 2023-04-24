@@ -28,6 +28,7 @@ public class ParkingMeters implements Serializable {
     @Column(name="TYPE_OF_METER")
     private String typeOfMeter;
     private Double recommendationIndex;
+    @Column(name="parkingNumber")
     private Integer index;
 
     public Integer getIndex() {
