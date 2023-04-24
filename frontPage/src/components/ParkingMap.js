@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import GoogleMapReact from "google-map-react";
 // import { GoogleMap, Marker } from "react-google-maps";
 import SearchForm from "./SearchForm";
@@ -21,7 +21,15 @@ const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
 const ParkingMap = (props) => {
   const [click, setClick] = useState();
+  const [current, setCurrent] = useState(0);
+  const carouselRef = useRef(null);
   const [mode, setMode] = useState([]);
+  const [selected, setSelected] = useState(false);
+
+  const styles = {
+    transform: selected ? "scale(5)" : "scale(1)",
+  };
+
   const defaultProps =
     props.decodeAddress.length === 0
       ? {
@@ -45,10 +53,11 @@ const ParkingMap = (props) => {
   var largeIconParkingSign = {};
   var largeIconParkingStructure = {};
   var largeIconParkingMeter = {};
+  var destinationIcon = {};
   if (props.decodeAddress.length !== 0) {
     iconParkingSign = {
       url: parkingSignIcon,
-      scaledSize: new window.google.maps.Size(20, 20),
+      scaledSize: new window.google.maps.Size(30, 30),
     };
     iconParkingStructure = {
       url: parkingStructureIcon,
@@ -56,7 +65,7 @@ const ParkingMap = (props) => {
     };
     iconParkingMeter = {
       url: parkingMeterIcon,
-      scaledSize: new window.google.maps.Size(20, 20),
+      scaledSize: new window.google.maps.Size(30, 30),
     };
     largeIconParkingSign = {
       url: parkingSignIcon,
@@ -72,24 +81,42 @@ const ParkingMap = (props) => {
     };
   }
 
+  function handleMarkerClick(index) {
+    setCurrent(index);
+    setSelected(true);
+    console.log("debug:" + index);
+    carouselRef.current.goTo(0);
+  }
+
+  function handleBeforeChange(from, to) {
+    setCurrent(to);
+  }
   const MyMapComponent = withScriptjs(
     withGoogleMap((prop) => (
-      <GoogleMap defaultZoom={18} defaultCenter={defaultProps.center}>
+      <GoogleMap defaultZoom={16} defaultCenter={defaultProps.center}>
         <Marker
           position={defaultProps.center}
           title="destination"
-          icon="http://maps.google.com/mapfiles/kml/paddle/D.png"
+          icon={{
+            url: "http://maps.google.com/mapfiles/kml/paddle/D.png",
+            scaledSize: new window.google.maps.Size(45, 45),
+          }}
         ></Marker>
         {/* prop.isMarkerShown */}
         {mode == "meter" &&
           props.parkingMetersData.map((item) => {
             return (
               <Marker
+                key={item.id}
                 position={{ lat: item.lat, lng: item.lon }}
                 title="parking meters"
                 icon={
-                  item.id == click ? largeIconParkingMeter : iconParkingMeter
+                  item.id == click || item.id == current
+                    ? largeIconParkingMeter
+                    : iconParkingMeter
                 }
+                onClick={() => handleMarkerClick(item.id)}
+                style={styles}
               ></Marker>
             );
           })}
@@ -97,6 +124,7 @@ const ParkingMap = (props) => {
           props.parkingStructuresData.map((item) => {
             return (
               <Marker
+                key={item.id}
                 position={{ lat: item.lat, lng: item.lon }}
                 title="parking structures"
                 icon={
@@ -111,6 +139,7 @@ const ParkingMap = (props) => {
           props.parkingSignsData.map((item) => {
             return (
               <Marker
+                key={item.id}
                 position={{ lat: item.lat, lng: item.lon }}
                 title="parking signs"
                 icon={item.id == click ? largeIconParkingSign : iconParkingSign}
@@ -180,7 +209,7 @@ const ParkingMap = (props) => {
           height: "405px",
         }}
       >
-        <Carousel>
+        <Carousel ref={carouselRef} beforeChange={handleBeforeChange} draggable>
           {mode == "meter" &&
             props.parkingMetersData.map((item) => {
               const emoji = Array.from(
@@ -190,6 +219,7 @@ const ParkingMap = (props) => {
               return (
                 <div>
                   <Card
+                    key={item.id}
                     title={`Parking Meters #${item.id}`}
                     bordered={false}
                     style={{ backgroundColor: "#aaabee91", height: "400px" }}
@@ -216,6 +246,7 @@ const ParkingMap = (props) => {
               return (
                 <div>
                   <Card
+                    key={item.id}
                     title={`Parking Structure #${item.id}`}
                     bordered={false}
                     style={{ backgroundColor: "#aaabee91" }}
@@ -241,6 +272,7 @@ const ParkingMap = (props) => {
               return (
                 <div>
                   <Card
+                    key={item.id}
                     title={`Parking Sign #${item.id}`}
                     bordered={false}
                     style={{ backgroundColor: "#aaabee91" }}
