@@ -116,7 +116,7 @@ const ParkingMap = (props) => {
                     : iconParkingMeter
                 }
                 // onClick={() => handleMarkerClick(item.id)}
-                // style={styles}
+                style={{ transform: "scale(1.5)" }}
               ></Marker>
             );
           })}
