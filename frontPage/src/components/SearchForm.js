@@ -112,7 +112,7 @@ const SearchForm = () => {
                   }}
                 />
               </Form.Item>
-              <Form.Item name="Pick date">
+              <Form.Item name="date">
                 <DatePicker
                   onChange={onChange}
                   style={{

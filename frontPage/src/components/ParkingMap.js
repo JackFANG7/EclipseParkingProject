@@ -11,15 +11,13 @@ import {
   GoogleMap,
   Marker,
 } from "react-google-maps";
-
-
-const { Option } = Select;
-
 import parkingSignIcon from "../assets/parking-sign-13347.svg";
 import parkingStructureIcon from "../assets/car-parking-location-red-placeholder-15952.svg";
 import parkingMeterIcon from "../assets/parking-meter-svgrepo-com.svg";
-const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
+const { Option } = Select;
+
+const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
 const ParkingMap = (props) => {
   const [click, setClick] = useState();
@@ -31,16 +29,15 @@ const ParkingMap = (props) => {
             lat: 34.14955,
             lng: -118.14145,
           },
-          zoom: 15,
+          zoom: 16,
         }
       : {
           center: {
             lat: props.decodeAddress.lat,
             lng: props.decodeAddress.lon,
           },
-          zoom: 15,
+          zoom: 16,
         };
-
 
   var iconParkingSign = {};
   var iconParkingStructure = {};
@@ -77,13 +74,14 @@ const ParkingMap = (props) => {
 
   const MyMapComponent = withScriptjs(
     withGoogleMap((prop) => (
-      <GoogleMap defaultZoom={16} defaultCenter={defaultProps.center}>
+      <GoogleMap defaultZoom={18} defaultCenter={defaultProps.center}>
         <Marker
           position={defaultProps.center}
           title="destination"
           icon="http://maps.google.com/mapfiles/kml/paddle/D.png"
         ></Marker>
-        {prop.isMarkerShown &&
+        {/* prop.isMarkerShown */}
+        {mode == "meter" &&
           props.parkingMetersData.map((item) => {
             return (
               <Marker
@@ -95,7 +93,7 @@ const ParkingMap = (props) => {
               ></Marker>
             );
           })}
-        {prop.isMarkerShown &&
+        {mode == "structure" &&
           props.parkingStructuresData.map((item) => {
             return (
               <Marker
@@ -109,7 +107,7 @@ const ParkingMap = (props) => {
               ></Marker>
             );
           })}
-        {prop.isMarkerShown &&
+        {mode == "sign" &&
           props.parkingSignsData.map((item) => {
             return (
               <Marker
@@ -180,104 +178,83 @@ const ParkingMap = (props) => {
           left: "52%",
           width: "610px",
           height: "405px",
-          backgroundColor: "orange",
         }}
       >
-
         <Carousel>
-          {props.parkingMetersData.map((item) => {
-            return (
-              <Card title={`Parking Meters #${item.id}`} bordered={false}>
-                <p>Recommendation Index: {}</p>
-                <p>daysOfOperation: {item.daysOfOperation}</p>
-                <p>hourlyRate: {item.hourlyRate}</p>
-                <p>maxTime: {item.maxTime}</p>
-                <p>hoursOfOperation: {item.hoursOfOperation}</p>
-                <p>typeOfMeter: {item.typeOfMeter}</p>
-              </Card>
-            );
-          })}
-
-          <div>
-            <h1>slide1</h1>
-          </div>
-        </Carousel>
-
-        <Row gutter={16}>
-          <Col span={8}>
-            {props.parkingMetersData.map((item) => {
+          {mode == "meter" &&
+            props.parkingMetersData.map((item) => {
+              const emoji = Array.from(
+                { length: item.recommendationIndex },
+                () => String.fromCodePoint(0x2b50)
+              );
               return (
-
-                <div
-                  onClick={() => {
-                    setClick(item.id);
-                  }}
-                >
+                <div>
                   <Card
                     title={`Parking Meters #${item.id}`}
                     bordered={false}
+                    style={{ backgroundColor: "#aaabee91", height: "400px" }}
+                    onClick={() => {
+                      setClick(item.id);
+                    }}
                   >
-                    <p>recommendationIndex: {item.recommendationIndex}</p>
-                    <p>daysOfOperation: {item.daysOfOperation}</p>
-                    <p>hourlyRate: {item.hourlyRate}</p>
-                    <p>maxTime: {item.maxTime}</p>
-                    <p>hoursOfOperation: {item.hoursOfOperation}</p>
-                    <p>typeOfMeter: {item.typeOfMeter}</p>
+                    <p>Recommendation Index: {emoji}</p>
+                    <p>Days Of Operation: {item.daysOfOperation}</p>
+                    <p>Hourly Rate: {item.hourlyRate}</p>
+                    <p>Max Parking Time: {item.maxTime} hr</p>
+                    <p>Hours Of Operation: {item.hoursOfOperation}</p>
+                    <p>Type Of Meter: {item.typeOfMeter}</p>
                   </Card>
                 </div>
               );
             })}
-          </Col>
-          <Col span={8}>
-            {props.parkingStructuresData.map((item) => {
+          {mode == "structure" &&
+            props.parkingStructuresData.map((item) => {
+              const emoji = Array.from(
+                { length: item.recommendationIndex },
+                () => String.fromCodePoint(0x2b50)
+              );
               return (
-                // <Col span={8}>
-                <div
-                  onClick={() => {
-                    setClick(item.id);
-                  }}
-                >
+                <div>
                   <Card
-                    title={`Parking Structures #${item.id}`}
-                    // bordered={false}
-                    // style={{
-                    //   width: 300,
-                    // }}
+                    title={`Parking Structure #${item.id}`}
+                    bordered={false}
+                    style={{ backgroundColor: "#aaabee91" }}
+                    onClick={() => {
+                      setClick(item.id);
+                    }}
                   >
-                    <p>recommendationIndex: {item.recommendationIndex}</p>
-                    <p>spaces: {item.spaces}</p>
-                    <p>daysOfOperation: {item.daysOfOperation}</p>
-                    <p>hourlyRate: {item.hourlyRate}</p>
-                    <p>evCharging: {item.evCharging}</p>
+                    <p>Recommendation Index: {emoji}</p>
+                    <p>Spaces: {item.spaces}</p>
+                    <p>Days Of Operation: {item.daysOfOperation}</p>
+                    <p>Hourly Rate: {item.hourlyRate}</p>
+                    <p>EV Charging: {item.evCharging}</p>
                   </Card>
                 </div>
-                // </Col>
               );
             })}
-          </Col>
-          <Col span={8}>
-            {props.parkingSignsData.map((item) => {
+          {mode == "sign" &&
+            props.parkingSignsData.map((item) => {
+              const emoji = Array.from(
+                { length: item.recommendationIndex },
+                () => String.fromCodePoint(0x2b50)
+              );
               return (
-                <div
-                  onClick={() => {
-                    setClick(item.id);
-                  }}
-                >
+                <div>
                   <Card
-                    title={`Parking Signs #${item.id}`}
+                    title={`Parking Sign #${item.id}`}
+                    bordered={false}
+                    style={{ backgroundColor: "#aaabee91" }}
+                    onClick={() => {
+                      setClick(item.id);
+                    }}
                   >
-                    <p>spaces: {item.sign}</p>
-                    {/* <p>daysOfOperation: {item.daysOfOperation}</p>
-                  <p>hourlyRate: {item.hourlyRate}</p>
-                  <p>evCharging: {item.evCharging}</p> */}
+                    <p>Recommendation Index: {emoji}</p>
+                    <p>Infomation: {item.sign}</p>
                   </Card>
                 </div>
-                // </Col>
               );
             })}
-          </Col>
-        </Row>
-
+        </Carousel>
       </div>
       {/* below is old card */}
     </div>
