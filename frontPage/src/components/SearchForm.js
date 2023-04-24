@@ -41,6 +41,7 @@ const SearchForm = () => {
     console.log(date, dateString);
   };
   const onFinish = (values) => {
+    console.log(values);
     setLoading(true);
     // console.log(values);
     getParkingMetersResult(values)
@@ -74,91 +75,86 @@ const SearchForm = () => {
   };
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <Space.Compact
-          style={{
-            width: "100%",
-            position: "relative",
-            bottom: "10%",
-            left: "10%",
-          }}
-        >
-          {/* <Row gutter={28}> */}
-          <Form
-            layout="inline"
-            style={{ left: "25%", position: "absolute" }}
-            initialValues={{
-              remember: true,
+      <div
+        style={{
+          marginTop: "35px",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <div style={{ marginRight: "5px" }}>
+          <Select
+            defaultValue="ParkingMap"
+            style={{ width: 120 }}
+            onSelect={(value) => {
+              setSelect(value);
             }}
-            onFinish={onFinish}
           >
-            <Form.Item name="address">
-              <Input
-                placeholder="Where to?"
-                prefix={<CarFilled />}
-                style={{
-                  width: "112%",
-                }}
-              />
-            </Form.Item>
-            <Form.Item name="date">
-              <DatePicker
-                onChange={onChange}
-                style={{
-                  width: "112%",
-                }}
-                suffixIcon={<div></div>}
-                disabledDate={(current) =>
-                  current.isBefore(moment().subtract(1, "day"))
-                }
-              />
-            </Form.Item>
-            <Form.Item name="time">
-              <TimePicker
-                onChange={onChange}
-                format="HH:mm"
-                defaultValue={moment("00:00", "HH:mm")}
-                minuteStep={30}
-                suffixIcon={<div></div>}
-                style={{
-                  width: "112%",
-                }}
-              />
-            </Form.Item>
-            {/* </Col> */}
-            {/* <Col span={8}> */}
-            <Form.Item>
-              <Button type="primary" htmlType="submit" loading={loading}>
-                Search
-              </Button>
-            </Form.Item>
-            {/* </Col> */}
-          </Form>
-          {/* </Row> */}
-        </Space.Compact>
+            <Option value="parking">ParkingMap</Option>
+            <Option value="traffic">TrafficMap</Option>
+          </Select>
+        </div>
+        <div>
+          <Space.Compact>
+            <Form
+              layout="inline"
+              initialValues={{
+                remember: true,
+              }}
+              onFinish={onFinish}
+            >
+              <Form.Item name="address">
+                <Input
+                  placeholder="Where to?"
+                  prefix={<CarFilled />}
+                  style={{
+                    width: "112%",
+                  }}
+                />
+              </Form.Item>
+              <Form.Item name="Pick date">
+                <DatePicker
+                  onChange={onChange}
+                  style={{
+                    width: "112%",
+                  }}
+                  suffixIcon={<CalendarFilled />}
+                  disabledDate={(current) =>
+                    current.isBefore(moment().subtract(1, "day"))
+                  }
+                />
+              </Form.Item>
+              <Form.Item name="time">
+                <TimePicker
+                  format="HH:mm"
+                  defaultValue={moment("00:00", "HH:mm")}
+                  minuteStep={30}
+                  suffixIcon={<div></div>}
+                  style={{
+                    width: "112%",
+                  }}
+                />
+              </Form.Item>
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={loading}
+                  style={{ background: "#605DE4", borderColor: "white" }}
+                >
+                  search
+                </Button>
+              </Form.Item>
+            </Form>
+          </Space.Compact>
+        </div>
       </div>
       <div>
-        <div>
-          <div>
-            <div>
-              <Select
-                defaultValue="ParkingMap"
-                style={{ width: 120 }}
-                onSelect={(value) => {
-                  setSelect(value);
-                }}
-              >
-                <Option value="parking">ParkingMap</Option>
-                <Option value="traffic">TrafficMap</Option>
-              </Select>
-              {select === "traffic" ? (
-                <TrafficMap {...decodeAddress} />
-              ) : (
-                <ParkingMap {...dataset} />
-              )}
-            </div>
-          </div>
-        </div>
+        {select === "traffic" ? (
+          <TrafficMap {...decodeAddress} />
+        ) : (
+          <ParkingMap {...dataset} />
+        )}
       </div>
     </>
   );

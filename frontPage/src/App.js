@@ -49,37 +49,10 @@ const App = () => {
           </div>
         </div>
       </Header>
-      <Content
-        className="site-layout"
-        style={{
-          padding: "0 0px",
-        }}
-      >
+      <Content className="site-layout">
         {searched ? (
           <div>
-            <div>
-              <SearchForm />
-            </div>
-            {/* <div
-              style={{
-                display: "flex",
-                direction: "row",
-                justifyContent: "space-evenly",
-              }}
-            >
-              <div>
-                <Select
-                  onSelect={(value) => {
-                    console.log(value);
-                    setSelect(value);
-                  }}
-                >
-                  <Option value="parking">ParkingMap</Option>
-                  <Option value="traffic">TrafficMap</Option>
-                </Select>
-                {select == "traffic" ? <TrafficMap /> : <ParkingMap />} */}
-            {/* </div> */}
-            {/* </div> */}
+            <SearchForm />
           </div>
         ) : (
           <div
