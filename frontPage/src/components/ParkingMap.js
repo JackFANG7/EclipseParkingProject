@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import GoogleMapReact from "google-map-react";
 // import { GoogleMap, Marker } from "react-google-maps";
 import SearchForm from "./SearchForm";
@@ -11,10 +11,13 @@ import {
   GoogleMap,
   Marker,
 } from "react-google-maps";
-
+import parkingSignIcon from "../assets/parking-sign-13347.svg";
+import parkingStructureIcon from "../assets/car-parking-location-red-placeholder-15952.svg";
+import parkingMeterIcon from "../assets/parking-meter-svgrepo-com.svg";
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
 const ParkingMap = (props) => {
+  const [click, setClick] = useState();
   const defaultProps =
     props.decodeAddress.length === 0
       ? {
@@ -31,17 +34,38 @@ const ParkingMap = (props) => {
           },
           zoom: 15,
         };
-  const icons = {
-    parkingMeter: {
-      icon: "http://maps.google.com/mapfiles/kml/shapes/parking_lot.png",
-    },
-    parkingStructure: {
-      icon: "http://maps.google.com/mapfiles/kml/shapes/parking_lot.png",
-    },
-    parkingSign: {
-      icon: "http://maps.google.com/mapfiles/kml/shapes/forbidden.png",
-    },
-  };
+  var iconParkingSign = {};
+  var iconParkingStructure = {};
+  var iconParkingMeter = {};
+  var largeIconParkingSign = {};
+  var largeIconParkingStructure = {};
+  var largeIconParkingMeter = {};
+  if (props.decodeAddress.length !== 0) {
+    iconParkingSign = {
+      url: parkingSignIcon,
+      scaledSize: new window.google.maps.Size(20, 20),
+    };
+    iconParkingStructure = {
+      url: parkingStructureIcon,
+      scaledSize: new window.google.maps.Size(50, 50),
+    };
+    iconParkingMeter = {
+      url: parkingMeterIcon,
+      scaledSize: new window.google.maps.Size(20, 20),
+    };
+    largeIconParkingSign = {
+      url: parkingSignIcon,
+      scaledSize: new window.google.maps.Size(50, 50),
+    };
+    largeIconParkingStructure = {
+      url: parkingStructureIcon,
+      scaledSize: new window.google.maps.Size(100, 100),
+    };
+    largeIconParkingMeter = {
+      url: parkingMeterIcon,
+      scaledSize: new window.google.maps.Size(50, 50),
+    };
+  }
   // const infowindow = new InfoWindow({
   //   content: "parking meters",
   //   ariaLabel: "Uluru",
@@ -60,7 +84,9 @@ const ParkingMap = (props) => {
               <Marker
                 position={{ lat: item.lat, lng: item.lon }}
                 title="parking meters"
-                icon={icons.parkingMeter.icon}
+                icon={
+                  item.id == click ? largeIconParkingMeter : iconParkingMeter
+                }
               ></Marker>
             );
           })}
@@ -70,7 +96,11 @@ const ParkingMap = (props) => {
               <Marker
                 position={{ lat: item.lat, lng: item.lon }}
                 title="parking structures"
-                icon={icons.parkingStructure.icon}
+                icon={
+                  item.id == click
+                    ? largeIconParkingStructure
+                    : iconParkingStructure
+                }
               ></Marker>
             );
           })}
@@ -80,7 +110,7 @@ const ParkingMap = (props) => {
               <Marker
                 position={{ lat: item.lat, lng: item.lon }}
                 title="parking signs"
-                icon={icons.parkingSign.icon}
+                icon={item.id == click ? largeIconParkingSign : iconParkingSign}
               ></Marker>
             );
           })}
@@ -126,19 +156,26 @@ const ParkingMap = (props) => {
             {props.parkingMetersData.map((item) => {
               return (
                 // <Col span={8}>
-                <Card
-                  title={`Parking Meters #${item.id}`}
-                  bordered={false}
-                  // style={{
-                  //   width: 300,
-                  // }}
+                <div
+                  onClick={() => {
+                    setClick(item.id);
+                  }}
                 >
-                  <p>daysOfOperation: {item.daysOfOperation}</p>
-                  <p>hourlyRate: {item.hourlyRate}</p>
-                  <p>maxTime: {item.maxTime}</p>
-                  <p>hoursOfOperation: {item.hoursOfOperation}</p>
-                  <p>typeOfMeter: {item.typeOfMeter}</p>
-                </Card>
+                  <Card
+                    title={`Parking Meters #${item.id}`}
+                    bordered={false}
+                    // style={{
+                    //   width: 300,
+                    // }}
+                  >
+                    <p>recommendationIndex: {item.recommendationIndex}</p>
+                    <p>daysOfOperation: {item.daysOfOperation}</p>
+                    <p>hourlyRate: {item.hourlyRate}</p>
+                    <p>maxTime: {item.maxTime}</p>
+                    <p>hoursOfOperation: {item.hoursOfOperation}</p>
+                    <p>typeOfMeter: {item.typeOfMeter}</p>
+                  </Card>
+                </div>
                 // </Col>
               );
             })}
@@ -147,18 +184,25 @@ const ParkingMap = (props) => {
             {props.parkingStructuresData.map((item) => {
               return (
                 // <Col span={8}>
-                <Card
-                  title={`Parking Structures #${item.id}`}
-                  // bordered={false}
-                  // style={{
-                  //   width: 300,
-                  // }}
+                <div
+                  onClick={() => {
+                    setClick(item.id);
+                  }}
                 >
-                  <p>spaces: {item.spaces}</p>
-                  <p>daysOfOperation: {item.daysOfOperation}</p>
-                  <p>hourlyRate: {item.hourlyRate}</p>
-                  <p>evCharging: {item.evCharging}</p>
-                </Card>
+                  <Card
+                    title={`Parking Structures #${item.id}`}
+                    // bordered={false}
+                    // style={{
+                    //   width: 300,
+                    // }}
+                  >
+                    <p>recommendationIndex: {item.recommendationIndex}</p>
+                    <p>spaces: {item.spaces}</p>
+                    <p>daysOfOperation: {item.daysOfOperation}</p>
+                    <p>hourlyRate: {item.hourlyRate}</p>
+                    <p>evCharging: {item.evCharging}</p>
+                  </Card>
+                </div>
                 // </Col>
               );
             })}
@@ -167,18 +211,24 @@ const ParkingMap = (props) => {
             {props.parkingSignsData.map((item) => {
               return (
                 // <Col span={8}>
-                <Card
-                  title={`Parking Signs #${item.id}`}
-                  // bordered={false}
-                  // style={{
-                  //   width: 300,
-                  // }}
+                <div
+                  onClick={() => {
+                    setClick(item.id);
+                  }}
                 >
-                  <p>spaces: {item.sign}</p>
-                  {/* <p>daysOfOperation: {item.daysOfOperation}</p>
+                  <Card
+                    title={`Parking Signs #${item.id}`}
+                    // bordered={false}
+                    // style={{
+                    //   width: 300,
+                    // }}
+                  >
+                    <p>spaces: {item.sign}</p>
+                    {/* <p>daysOfOperation: {item.daysOfOperation}</p>
                   <p>hourlyRate: {item.hourlyRate}</p>
                   <p>evCharging: {item.evCharging}</p> */}
-                </Card>
+                  </Card>
+                </div>
                 // </Col>
               );
             })}

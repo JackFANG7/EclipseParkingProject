@@ -42,6 +42,7 @@ const SearchForm = () => {
   };
   const onFinish = (values) => {
     setLoading(true);
+    // console.log(values);
     getParkingMetersResult(values)
       .then((data) => {
         setParkingMeters(data);
@@ -114,6 +115,7 @@ const SearchForm = () => {
             </Form.Item>
             <Form.Item name="time">
               <TimePicker
+                onChange={onChange}
                 format="HH:mm"
                 defaultValue={moment("00:00", "HH:mm")}
                 minuteStep={30}
