@@ -75,11 +75,15 @@ public class SearchParkingService {
             }
         });
         if(parkingMeters.size()<=5) {
+            for(int i=0; i<parkingMeters.size(); i++){
+                parkingMeters.get(i).setId(i);
+            }
             return parkingMeters;
         }
         List<ParkingMeters> list=new ArrayList<>();
         for(int i=0; i<5; i++){
-            list.add(parkingMeters.get(i));
+            ParkingMeters item=parkingMeters.get(i).setId(i);
+            list.add(item);
         }
         return list;
     }
@@ -134,11 +138,16 @@ public class SearchParkingService {
             }
         });
         if(publicParkings.size()<=5) {
+            for(int i=0; i<publicParkings.size(); i++){
+                publicParkings.get(i).setId(i);
+            }
             return publicParkings;
         }
         List<PublicParking> list=new ArrayList<>();
         for(int i=0; i<5; i++){
-            list.add(publicParkings.get(i));
+            PublicParking item=publicParkings.get(i).setId(i);
+            list.add(item);
+
         }
         return list;
     }
@@ -197,11 +206,15 @@ public class SearchParkingService {
             }
         });
         if(parkingSigns.size()<=5) {
+            for(int i=0; i<parkingSigns.size(); i++){
+                parkingSigns.get(i).setId(i);
+            }
             return parkingSigns;
         }
         List<ParkingSigns> list=new ArrayList<>();
         for(int i=0; i<5; i++){
-            list.add(parkingSigns.get(i));
+            ParkingSigns item=parkingSigns.get(i).setId(i);
+            list.add(item);
         }
         return list;
     }
